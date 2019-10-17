@@ -1,7 +1,11 @@
 mod lexer;
+mod iterative;
 mod naive_recursive_descent;
+mod parser_error;
+mod parser_utils;
 
 use std::env::args;
+use std::iter::Peekable;
 
 struct Command {
     name: String,
@@ -18,8 +22,13 @@ fn build_commands() -> Vec<Command> {
         },
         Command {
             name: "naive-recursive-descent".to_string(),
-            description: "Runs the Naive Recursive Descent Parser and calculates the result".to_string(),
-            command_fn: naive_recursive_descent
+            description: "Runs the Naive Recursive Descent Parser (G2) and calculates the result".to_string(),
+            command_fn: |x| run_parser(naive_recursive_descent::expression, x)
+        },
+        Command {
+            name: "iterative".to_string(),
+            description: "Runs the Iterative Parser (G3) and calculates the result".to_string(),
+            command_fn: |x| run_parser(iterative::expression, x)
         },
     ]
 }
@@ -53,7 +62,7 @@ fn print_usage(commands: &Vec<Command>) {
     println!("and INPUT is a mathematical expression.\n");
     
     println!("Available commands:\n");
-    commands.iter().for_each(|c| println!("{:20} - {}", c.name, c.description));
+    commands.iter().for_each(|c| println!("{:25} - {}", c.name, c.description));
 }
 
 
@@ -69,11 +78,11 @@ fn list_morphemes(input: String) {
     morphemes.for_each(|m| println!("{:?}", m));
 }
 
-fn naive_recursive_descent(input: String) {
+fn run_parser(parser: fn(&mut Peekable<lexer::Morphemes>) -> Result<f64, parser_error::Error>, input: String) {
     let lexer = lexer::Lexer::from_str(&input);
     let morphemes = lexer.morphemes();
 
-    let result = naive_recursive_descent::expression(&mut morphemes.peekable());
+    let result = parser(&mut morphemes.peekable());
     match result {
         Ok(v) => println!("{}", v),
         Err(e) => println!("Error {:?}", e)

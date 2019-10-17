@@ -1,3 +1,5 @@
+// Note that copy-pasted code is intentional in order to compare the different solutions as they evolve
+
 use std::iter::Peekable;
 use super::lexer::{ MorphemeContent, Morphemes, SymbolType };
 use super::parser_error::Error;
@@ -7,34 +9,38 @@ use super::parser_utils::{ eat_one, peek_symbol };
 use super::lexer::Morpheme;
 
 pub fn expression(morphemes: &mut Peekable<Morphemes>) -> Result<f64, Error> {
-    let left = term(morphemes)?;
+    let mut accu = term(morphemes)?;
 
-    match peek_symbol(morphemes) {
-        Some(SymbolType::Add) => {
-            eat_one(morphemes);
-            Ok(left + expression(morphemes)?)
-        },
-        Some(SymbolType::Subtract) => {
-            eat_one(morphemes);
-            Ok(left - expression(morphemes)?)
-        },
-        None | Some(_) => Ok(left)
+    loop {
+        match peek_symbol(morphemes) {
+            Some(SymbolType::Add) => {
+                eat_one(morphemes);
+                accu += term(morphemes)?;
+            },
+            Some(SymbolType::Subtract) => {
+                eat_one(morphemes);
+                accu -= term(morphemes)?;
+            },
+            _ => return Ok(accu)
+        }
     }
 }
 
 pub fn term(morphemes: &mut Peekable<Morphemes>) -> Result<f64, Error> {
-    let left = factor(morphemes)?;
+    let mut accu = factor(morphemes)?;
 
-    match peek_symbol(morphemes) {
-        Some(SymbolType::Multiply) => {
-            eat_one(morphemes);
-            Ok(left * term(morphemes)?)
-        },
-        Some(SymbolType::Divide) => {
-            eat_one(morphemes);
-            Ok(left / term(morphemes)?)
-        },
-        None | Some(_) => Ok(left)
+    loop {
+        match peek_symbol(morphemes) {
+            Some(SymbolType::Multiply) => {
+                eat_one(morphemes);
+                accu *= factor(morphemes)?;
+            },
+            Some(SymbolType::Divide) => {
+                eat_one(morphemes);
+                accu /= factor(morphemes)?;
+            },
+            _ => return Ok(accu)
+        }
     }
 }
 
@@ -64,6 +70,7 @@ fn expr_factor(morphemes: &mut Peekable<Morphemes>) -> Result<f64, Error> {
     }
 }
 
+
 #[cfg(test)]
 #[test]
 fn yields_expected_results() {
@@ -80,7 +87,7 @@ fn yields_expected_results() {
 
         ("2+3*4+5", Ok(19.0)), ("(2+3)*(4+5)", Ok(45.0)),
 
-        ("12/2*3", Ok(2.0)), // This result is mathematically wrong but expected, since the naive recursive descent parser calculates right-to-left
+        ("12/2*3", Ok(18.0)),
 
         ("1+", Err(Error::UnexpectedEOF)),
         ("2*3*", Err(Error::UnexpectedEOF)),
