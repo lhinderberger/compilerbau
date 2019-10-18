@@ -6,6 +6,9 @@ mod parser_error;
 mod parser_utils;
 mod split;
 
+#[cfg(test)]
+mod parser_tests;
+
 use std::env::args;
 use std::iter::Peekable;
 
