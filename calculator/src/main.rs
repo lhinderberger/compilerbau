@@ -3,6 +3,7 @@ mod iterative;
 mod naive_recursive_descent;
 mod parser_error;
 mod parser_utils;
+mod split;
 
 use std::env::args;
 use std::iter::Peekable;
@@ -29,6 +30,11 @@ fn build_commands() -> Vec<Command> {
             name: "iterative".to_string(),
             description: "Runs the Iterative Parser (G3) and calculates the result".to_string(),
             command_fn: |x| run_parser(iterative::expression, x)
+        },
+        Command {
+            name: "split".to_string(),
+            description: "Runs the Split Parser (G4) and calculates the result".to_string(),
+            command_fn: |x| run_parser(split::expression, x)
         },
     ]
 }
