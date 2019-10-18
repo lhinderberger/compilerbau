@@ -1,6 +1,6 @@
 mod lexer;
 mod iterative;
-mod naive_recursive_descent;
+mod naive;
 mod parser_common;
 mod parser_error;
 mod parser_utils;
@@ -26,9 +26,9 @@ fn build_commands() -> Vec<Command> {
             command_fn: list_morphemes
         },
         Command {
-            name: "naive-recursive-descent".to_string(),
+            name: "naive".to_string(),
             description: "Runs the Naive Recursive Descent Parser (G2) and calculates the result".to_string(),
-            command_fn: |x| run_parser(naive_recursive_descent::expression, x)
+            command_fn: |x| run_parser(naive::expression, x)
         },
         Command {
             name: "iterative".to_string(),

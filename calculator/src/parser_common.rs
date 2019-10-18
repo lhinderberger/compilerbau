@@ -4,7 +4,7 @@ use std::iter::Peekable;
 use super::lexer::{ MorphemeContent, Morphemes, SymbolType };
 use super::parser_error::Error;
 
-// Rule for parsing Factors, which is identical for all native_recursive_descent, iterative and split
+// Rule for parsing Factors, which is identical for the naive, iterative and split parsers
 // It takes in the usual peekable morpheme iterator as well as a pointer to the function for parsing expressions
 // (for the recursion that occurs when parsing a braced exception)
 pub fn factor(morphemes: &mut Peekable<Morphemes>, expression_fn: fn(&mut Peekable<Morphemes>) -> Result<f64, Error>) -> Result<f64, Error> {
