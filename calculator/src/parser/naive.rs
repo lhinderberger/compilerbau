@@ -20,7 +20,7 @@ pub fn expression(morphemes: &mut Peekable<Morphemes>) -> Result<f64, Error> {
             eat_one(morphemes);
             Ok(left - expression(morphemes)?)
         },
-        None | Some(_) => Ok(left)
+        _ => Ok(left)
     }
 }
 
@@ -36,7 +36,7 @@ pub fn term(morphemes: &mut Peekable<Morphemes>) -> Result<f64, Error> {
             eat_one(morphemes);
             Ok(left / term(morphemes)?)
         },
-        None | Some(_) => Ok(left)
+        _ => Ok(left)
     }
 }
 
