@@ -1,10 +1,11 @@
 use std::iter::Peekable;
-use super::lexer::{ MorphemeContent, Morphemes, SymbolType };
+use super::lexer::{ Morphemes, SymbolType };
+use super::parser_common::factor;
 use super::parser_error::Error;
 use super::parser_utils::{ eat_one, peek_symbol };
 
 #[cfg(test)]
-use super::lexer::Morpheme;
+use super::lexer::{ Morpheme, MorphemeContent };
 
 pub fn expression(morphemes: &mut Peekable<Morphemes>) -> Result<f64, Error> {
     let left = term(morphemes)?;
@@ -23,7 +24,7 @@ pub fn expression(morphemes: &mut Peekable<Morphemes>) -> Result<f64, Error> {
 }
 
 pub fn term(morphemes: &mut Peekable<Morphemes>) -> Result<f64, Error> {
-    let left = factor(morphemes)?;
+    let left = factor(morphemes, expression)?;
 
     match peek_symbol(morphemes) {
         Some(SymbolType::Multiply) => {
@@ -35,32 +36,6 @@ pub fn term(morphemes: &mut Peekable<Morphemes>) -> Result<f64, Error> {
             Ok(left / term(morphemes)?)
         },
         None | Some(_) => Ok(left)
-    }
-}
-
-pub fn factor(morphemes: &mut Peekable<Morphemes>) -> Result<f64, Error> {
-    match morphemes.next() {
-        Some(morpheme) => match morpheme.content {
-            MorphemeContent::Number{ value } => Ok(value),
-            MorphemeContent::Symbol{ symbol_type } => match symbol_type {
-                SymbolType::RoundOpeningBrace => Ok(expr_factor(morphemes)?),
-                _ => Err(Error::UnexpectedMorpheme{morpheme: morpheme})
-            },
-            _ => Err(Error::UnexpectedMorpheme{morpheme: morpheme})
-        },
-        None => Err(Error::UnexpectedEOF)
-    }
-}
-
-fn expr_factor(morphemes: &mut Peekable<Morphemes>) -> Result<f64, Error> {
-    let result = expression(morphemes)?;
-
-    match morphemes.next() {
-        Some(morpheme) => match morpheme.content {
-            MorphemeContent::Symbol{symbol_type: SymbolType::RoundClosingBrace} => Ok(result),
-            _ => Err(Error::UnexpectedMorpheme{morpheme: morpheme})
-        },
-        None => Err(Error::UnexpectedEOF)
     }
 }
 

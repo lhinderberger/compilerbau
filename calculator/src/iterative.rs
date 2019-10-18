@@ -1,12 +1,13 @@
 // Note that copy-pasted code is intentional in order to compare the different solutions as they evolve
 
 use std::iter::Peekable;
-use super::lexer::{ MorphemeContent, Morphemes, SymbolType };
+use super::lexer::{ Morphemes, SymbolType };
+use super::parser_common::factor;
 use super::parser_error::Error;
 use super::parser_utils::{ eat_one, peek_symbol };
 
 #[cfg(test)]
-use super::lexer::Morpheme;
+use super::lexer::{ Morpheme, MorphemeContent };
 
 pub fn expression(morphemes: &mut Peekable<Morphemes>) -> Result<f64, Error> {
     let mut accu = term(morphemes)?;
@@ -27,46 +28,20 @@ pub fn expression(morphemes: &mut Peekable<Morphemes>) -> Result<f64, Error> {
 }
 
 pub fn term(morphemes: &mut Peekable<Morphemes>) -> Result<f64, Error> {
-    let mut accu = factor(morphemes)?;
+    let mut accu = factor(morphemes, expression)?;
 
     loop {
         match peek_symbol(morphemes) {
             Some(SymbolType::Multiply) => {
                 eat_one(morphemes);
-                accu *= factor(morphemes)?;
+                accu *= factor(morphemes, expression)?;
             },
             Some(SymbolType::Divide) => {
                 eat_one(morphemes);
-                accu /= factor(morphemes)?;
+                accu /= factor(morphemes, expression)?;
             },
             _ => return Ok(accu)
         }
-    }
-}
-
-pub fn factor(morphemes: &mut Peekable<Morphemes>) -> Result<f64, Error> {
-    match morphemes.next() {
-        Some(morpheme) => match morpheme.content {
-            MorphemeContent::Number{ value } => Ok(value),
-            MorphemeContent::Symbol{ symbol_type } => match symbol_type {
-                SymbolType::RoundOpeningBrace => Ok(expr_factor(morphemes)?),
-                _ => Err(Error::UnexpectedMorpheme{morpheme: morpheme})
-            },
-            _ => Err(Error::UnexpectedMorpheme{morpheme: morpheme})
-        },
-        None => Err(Error::UnexpectedEOF)
-    }
-}
-
-fn expr_factor(morphemes: &mut Peekable<Morphemes>) -> Result<f64, Error> {
-    let result = expression(morphemes)?;
-
-    match morphemes.next() {
-        Some(morpheme) => match morpheme.content {
-            MorphemeContent::Symbol{symbol_type: SymbolType::RoundClosingBrace} => Ok(result),
-            _ => Err(Error::UnexpectedMorpheme{morpheme: morpheme})
-        },
-        None => Err(Error::UnexpectedEOF)
     }
 }
 

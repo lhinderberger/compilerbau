@@ -1,6 +1,7 @@
 mod lexer;
 mod iterative;
 mod naive_recursive_descent;
+mod parser_common;
 mod parser_error;
 mod parser_utils;
 mod split;
