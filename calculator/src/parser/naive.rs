@@ -1,11 +1,12 @@
 use std::iter::Peekable;
-use super::lexer::{ Morphemes, SymbolType };
-use super::parser_common::factor;
-use super::parser_error::Error;
-use super::parser_utils::{ eat_one, peek_symbol };
+
+use super::Error;
+use super::common_rules::factor;
+use super::utils::{ eat_one, peek_symbol };
+use super::super::lexer::{ Morphemes, SymbolType };
 
 #[cfg(test)]
-use super::parser_tests::{ yields_expected_results_for_basic_expressions, calculates_right_to_left };
+use super::tests::{ yields_expected_results_for_basic_expressions, calculates_right_to_left };
 
 pub fn expression(morphemes: &mut Peekable<Morphemes>) -> Result<f64, Error> {
     let left = term(morphemes)?;

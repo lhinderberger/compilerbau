@@ -1,5 +1,5 @@
 use std::iter::Peekable;
-use super::lexer::{ Morphemes, MorphemeContent, SymbolType };
+use super::super::lexer::{ Morphemes, MorphemeContent, SymbolType };
 
 pub fn eat_one(morphemes: &mut Peekable<Morphemes>) {
     let _ = morphemes.next().unwrap();

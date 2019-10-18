@@ -1,8 +1,6 @@
-// Common parser rules
-
 use std::iter::Peekable;
-use super::lexer::{ MorphemeContent, Morphemes, SymbolType };
-use super::parser_error::Error;
+use super::Error;
+use super::super::lexer::{ MorphemeContent, Morphemes, SymbolType };
 
 // Rule for parsing Factors, which is identical for the naive, iterative and split parsers
 // It takes in the usual peekable morpheme iterator as well as a pointer to the function for parsing expressions

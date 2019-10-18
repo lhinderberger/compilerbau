@@ -1,13 +1,5 @@
 mod lexer;
-mod iterative;
-mod naive;
-mod parser_common;
-mod parser_error;
-mod parser_utils;
-mod split;
-
-#[cfg(test)]
-mod parser_tests;
+mod parser;
 
 use std::env::args;
 use std::iter::Peekable;
@@ -28,17 +20,17 @@ fn build_commands() -> Vec<Command> {
         Command {
             name: "naive".to_string(),
             description: "Runs the Naive Recursive Descent Parser (G2) and calculates the result".to_string(),
-            command_fn: |x| run_parser(naive::expression, x)
+            command_fn: |x| run_parser(parser::naive::expression, x)
         },
         Command {
             name: "iterative".to_string(),
             description: "Runs the Iterative Parser (G3) and calculates the result".to_string(),
-            command_fn: |x| run_parser(iterative::expression, x)
+            command_fn: |x| run_parser(parser::iterative::expression, x)
         },
         Command {
             name: "split".to_string(),
             description: "Runs the Split Parser (G4) and calculates the result".to_string(),
-            command_fn: |x| run_parser(split::expression, x)
+            command_fn: |x| run_parser(parser::split::expression, x)
         },
     ]
 }
@@ -88,7 +80,7 @@ fn list_morphemes(input: String) {
     morphemes.for_each(|m| println!("{:?}", m));
 }
 
-fn run_parser(parser: fn(&mut Peekable<lexer::Morphemes>) -> Result<f64, parser_error::Error>, input: String) {
+fn run_parser(parser: fn(&mut Peekable<lexer::Morphemes>) -> Result<f64, parser::Error>, input: String) {
     let lexer = lexer::Lexer::from_str(&input);
     let morphemes = lexer.morphemes();
 

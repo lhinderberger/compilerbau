@@ -1,6 +1,7 @@
 use std::iter::Peekable;
-use super::lexer::{ Morpheme, MorphemeContent, Morphemes, SymbolType };
-use super::parser_error::Error;
+
+use super::Error;
+use super::super::lexer::{ Lexer, Morpheme, MorphemeContent, Morphemes, SymbolType };
 
 pub fn yields_expected_results_for_basic_expressions(expression_fn: fn(&mut Peekable<Morphemes>) -> Result<f64, Error>) {
     let test_data = vec![
@@ -60,7 +61,7 @@ pub fn calculates_left_to_right(expression_fn: fn(&mut Peekable<Morphemes>) -> R
 
 fn run_tests(test_data: Vec<(&'static str, Result<f64, Error>)>, expression_fn: fn(&mut Peekable<Morphemes>) -> Result<f64, Error>) {
     for (input, expected) in test_data {
-        let lexer = super::lexer::Lexer::from_str(input);
+        let lexer = Lexer::from_str(input);
         let mut morphemes = lexer.morphemes().peekable();
         let actual = expression_fn(&mut morphemes);
 
