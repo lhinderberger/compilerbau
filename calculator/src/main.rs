@@ -64,7 +64,7 @@ fn print_usage(commands: &Vec<Command>) {
     println!("and INPUT is a mathematical expression.\n");
     
     println!("Available commands:\n");
-    commands.iter().for_each(|c| println!("{:25} - {}", c.name, c.description));
+    commands.iter().for_each(|c| println!("{:15} - {}", c.name, c.description));
 }
 
 
