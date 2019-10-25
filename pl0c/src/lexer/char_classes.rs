@@ -28,6 +28,21 @@ impl CharClass {
             Self::Other
         }
     }
+
+
+    // Returns a unique 8 bit code (continuous, starting at zero) for each
+    // distinguishable character class.
+    pub fn code(&self) -> u8 {
+        match self {
+            Self::Number => 0,
+            Self::Letter => 1,
+            Self::Symbol(SymbolCharType::CompositePrefix) => 2,
+            Self::Symbol(SymbolCharType::CompositeSuffix) => 3,
+            Self::Symbol(SymbolCharType::Singular) => 4,
+            Self::Whitespace => 5,
+            Self::Other => 6
+        }
+    }
 }
 
 #[cfg(test)]
