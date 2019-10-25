@@ -61,21 +61,4 @@ mod tests {
             }
         }
     }
-
-    #[test]
-    fn benchmark() {
-        let input = "abcdefgäöü + TEST = ß\n\t2+4+6+8-7-5-3-1=?\n";
-        let mut output = vec![];
-
-        let start = Instant::now();
-        for _ in 0..100000 {
-            for c in input.chars() {
-                output.push(CharClass::from(c));
-            }
-            output.clear();
-        }
-        let end = Instant::now();
-
-        println!("Time needed: {:?}", (end-start));
-    }
 }
