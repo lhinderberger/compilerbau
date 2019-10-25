@@ -11,11 +11,9 @@ pub enum CharClass {
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq, Eq)]
 pub enum SymbolCharType {
-    Colon,
-    Equals,
-    Lesser,
-    Greater,
-    Other
+    Singular,
+    CompositePrefix,
+    CompositeSuffix
 }
 
 impl CharClass {
@@ -36,7 +34,6 @@ impl CharClass {
 mod tests {
     use super::*;
     use std::collections::HashMap;
-    use std::time::Instant;
 
     #[test]
     fn correct_class_is_detected() {
@@ -47,11 +44,9 @@ mod tests {
             'ä','ö','ü','Ä','Ö','Ü','á','é','à','è','â','ê','Á','É','À','È','Â','Ê','ß'
         ]);
         test_data.insert(CharClass::Number, vec!['0','1','2','3','4','5','6','7','8','9']);
-        test_data.insert(CharClass::Symbol(SymbolCharType::Colon), vec![':']);
-        test_data.insert(CharClass::Symbol(SymbolCharType::Equals), vec!['=']);
-        test_data.insert(CharClass::Symbol(SymbolCharType::Greater), vec!['>']);
-        test_data.insert(CharClass::Symbol(SymbolCharType::Lesser), vec!['<']);
-        test_data.insert(CharClass::Symbol(SymbolCharType::Other), vec!['+','-','*','/',',','.',';','(',')','?','!','#','|']);
+        test_data.insert(CharClass::Symbol(SymbolCharType::CompositePrefix), vec![':', '<', '>']);
+        test_data.insert(CharClass::Symbol(SymbolCharType::CompositeSuffix), vec!['=']);
+        test_data.insert(CharClass::Symbol(SymbolCharType::Singular), vec!['+','-','*','/',',','.',';','(',')','?','!','#','|']);
         test_data.insert(CharClass::Whitespace, vec![' ', '\t', '\n', '\r']);
         test_data.insert(CharClass::Other, vec!['%','§','$','~','½','²','³']);
 
