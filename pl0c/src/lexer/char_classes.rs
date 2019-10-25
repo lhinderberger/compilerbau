@@ -17,7 +17,7 @@ pub enum SymbolCharType {
 }
 
 impl CharClass {
-    pub fn from(c: char) -> Self {
+    pub fn of(c: char) -> Self {
         if c.is_ascii() {
             ASCII_CHAR_CLASSES[(c as u8) as usize]
         }
@@ -52,7 +52,7 @@ mod tests {
 
         for (char_class,chars) in test_data {
             for c in chars {
-                assert_eq!(char_class, CharClass::from(c));
+                assert_eq!(char_class, CharClass::of(c));
             }
         }
     }
