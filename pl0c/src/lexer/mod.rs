@@ -1,5 +1,6 @@
 mod char_classes;
 mod char_classes_vector;
+mod iterator;
 mod lexer;
 mod morpheme;
 mod symbol_lookup;
@@ -8,6 +9,7 @@ mod symbol_lookup;
 mod test_data;
 
 pub use char_classes::*;
+pub use iterator::*;
 pub use lexer::*;
 pub use morpheme::*;
 pub use symbol_lookup::*;

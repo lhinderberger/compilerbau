@@ -60,6 +60,12 @@ impl<'a> Lexer<'a> {
         Self::new(input.chars().peekable())
     }
 
+
+    // Returns an iterator over the Morphemes of this Lexer
+    pub fn morphemes(self) -> Morphemes<'a> where Self: Sized {
+        Morphemes::new(self)
+    }
+
     // Returns the next morpheme in the input
     // If there are no more morphemes left, this will return None
     pub fn next_morpheme(&mut self) -> Option<Morpheme> {        
