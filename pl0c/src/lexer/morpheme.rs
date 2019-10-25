@@ -19,6 +19,6 @@ pub enum SymbolType {
     Point, Semicolon, Pipe, QuestionMark, ExclamationMark, Hash,
     RoundOpeningBrace, RoundClosingBrace,
     Equals, Lesser, LesserOrEqual, Greater, GreaterOrEqual,
-    Assignment,
+    Colon, Assignment,
     Begin, Call, Const, End, Do, If, Procedure, Then, Var, While
 }
