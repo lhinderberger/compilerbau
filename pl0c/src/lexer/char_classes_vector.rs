@@ -19,5 +19,5 @@ pub const ASCII_CHAR_CLASSES: [CharClass;128] = [
     C9,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,
     C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C9,  C9,  C9,  C9,  C9,
     C9,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,
-    C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C9,  C9,  C9,  C9,  C9
+    C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C1,  C9, C49,  C9,  C9,  C9
 ];

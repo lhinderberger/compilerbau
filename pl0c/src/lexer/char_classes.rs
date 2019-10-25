@@ -51,7 +51,7 @@ mod tests {
         test_data.insert(CharClass::Symbol(SymbolCharType::Equals), vec!['=']);
         test_data.insert(CharClass::Symbol(SymbolCharType::Greater), vec!['>']);
         test_data.insert(CharClass::Symbol(SymbolCharType::Lesser), vec!['<']);
-        test_data.insert(CharClass::Symbol(SymbolCharType::Other), vec!['+','-','*','/',',','.',';','(',')','?','!','#']);
+        test_data.insert(CharClass::Symbol(SymbolCharType::Other), vec!['+','-','*','/',',','.',';','(',')','?','!','#','|']);
         test_data.insert(CharClass::Whitespace, vec![' ', '\t', '\n', '\r']);
         test_data.insert(CharClass::Other, vec!['%','§','$','~','½','²','³']);
 
