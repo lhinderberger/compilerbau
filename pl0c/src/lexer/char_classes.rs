@@ -1,4 +1,6 @@
-#[derive(Debug, Hash, PartialEq, Eq)]
+use super::char_classes_vector::ASCII_CHAR_CLASSES;
+
+#[derive(Clone, Copy, Debug, Hash, PartialEq, Eq)]
 pub enum CharClass {
     Number,
     Letter,
@@ -7,7 +9,7 @@ pub enum CharClass {
     Other
 }
 
-#[derive(Debug, Hash, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Hash, PartialEq, Eq)]
 pub enum SymbolCharType {
     Colon,
     Equals,
@@ -16,27 +18,13 @@ pub enum SymbolCharType {
     Other
 }
 
-const SYMBOLS: &'static str = "+-*/,.;()?!#=<>:";
-
 impl CharClass {
     pub fn from(c: char) -> Self {
-        if c.is_ascii_digit() {
-            Self::Number
+        if c.is_ascii() {
+            ASCII_CHAR_CLASSES[(c as u8) as usize]
         }
         else if c.is_alphabetic() {
             Self::Letter
-        }
-        else if SYMBOLS.contains(c) {
-            Self::Symbol(match c {
-                ':' => SymbolCharType::Colon,
-                '=' => SymbolCharType::Equals,
-                '<' => SymbolCharType::Lesser,
-                '>' => SymbolCharType::Greater,
-                _ => SymbolCharType::Other
-            })
-        }
-        else if c.is_whitespace() {
-            Self::Whitespace
         }
         else {
             Self::Other
