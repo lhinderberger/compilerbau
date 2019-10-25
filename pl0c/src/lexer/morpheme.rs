@@ -8,15 +8,15 @@ pub struct Morpheme {
 #[derive(Debug, PartialEq)]
 pub enum MorphemeContent {
     Invalid,
-    Number {value: f64},
-    Symbol {symbol_type: SymbolType},
-    Identifier {value: String}
+    Number(u64), //TODO: What about other numeric data types? Smaller integers?
+    Symbol(SymbolType),
+    Identifier(String)
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum SymbolType {
     Add, Subtract, Multiply, Divide,
-    Point, Semicolon, Pipe, QuestionMark, ExclamationMark, Hash,
+    Point, Comma, Semicolon, Pipe, QuestionMark, ExclamationMark, Hash,
     RoundOpeningBrace, RoundClosingBrace,
     Equals, Lesser, LesserOrEqual, Greater, GreaterOrEqual,
     Colon, Assignment,
