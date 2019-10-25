@@ -1,0 +1,93 @@
+#[derive(Debug, Hash, PartialEq, Eq)]
+pub enum CharClass {
+    Number,
+    Letter,
+    Symbol(SymbolCharType),
+    Whitespace,
+    Other
+}
+
+#[derive(Debug, Hash, PartialEq, Eq)]
+pub enum SymbolCharType {
+    Colon,
+    Equals,
+    Lesser,
+    Greater,
+    Other
+}
+
+const SYMBOLS: &'static str = "+-*/,.;()?!#=<>:";
+
+impl CharClass {
+    pub fn from(c: char) -> Self {
+        if c.is_ascii_digit() {
+            Self::Number
+        }
+        else if c.is_alphabetic() {
+            Self::Letter
+        }
+        else if SYMBOLS.contains(c) {
+            Self::Symbol(match c {
+                ':' => SymbolCharType::Colon,
+                '=' => SymbolCharType::Equals,
+                '<' => SymbolCharType::Lesser,
+                '>' => SymbolCharType::Greater,
+                _ => SymbolCharType::Other
+            })
+        }
+        else if c.is_whitespace() {
+            Self::Whitespace
+        }
+        else {
+            Self::Other
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::collections::HashMap;
+    use std::time::Instant;
+
+    #[test]
+    fn correct_class_is_detected() {
+        let mut test_data = HashMap::new();
+        test_data.insert(CharClass::Letter, vec![
+            'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+            'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+            'ä','ö','ü','Ä','Ö','Ü','á','é','à','è','â','ê','Á','É','À','È','Â','Ê','ß'
+        ]);
+        test_data.insert(CharClass::Number, vec!['0','1','2','3','4','5','6','7','8','9']);
+        test_data.insert(CharClass::Symbol(SymbolCharType::Colon), vec![':']);
+        test_data.insert(CharClass::Symbol(SymbolCharType::Equals), vec!['=']);
+        test_data.insert(CharClass::Symbol(SymbolCharType::Greater), vec!['>']);
+        test_data.insert(CharClass::Symbol(SymbolCharType::Lesser), vec!['<']);
+        test_data.insert(CharClass::Symbol(SymbolCharType::Other), vec!['+','-','*','/',',','.',';','(',')','?','!','#']);
+        test_data.insert(CharClass::Whitespace, vec![' ', '\t', '\n', '\r']);
+        test_data.insert(CharClass::Other, vec!['%','§','$','~','½','²','³']);
+
+        for (char_class,chars) in test_data {
+            for c in chars {
+                assert_eq!(char_class, CharClass::from(c));
+            }
+        }
+    }
+
+    #[test]
+    fn benchmark() {
+        let input = "abcdefgäöü + TEST = ß\n\t2+4+6+8-7-5-3-1=?\n";
+        let mut output = vec![];
+
+        let start = Instant::now();
+        for _ in 0..100000 {
+            for c in input.chars() {
+                output.push(CharClass::from(c));
+            }
+            output.clear();
+        }
+        let end = Instant::now();
+
+        println!("Time needed: {:?}", (end-start));
+    }
+}
