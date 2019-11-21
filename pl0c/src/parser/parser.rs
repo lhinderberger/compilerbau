@@ -1,3 +1,4 @@
+use super::super::semantics;
 use super::super::lexer::*;
 use super::error::*;
 use super::syntax_graph::*;
@@ -14,7 +15,7 @@ pub struct Parser<'a, T: VertexTookObserver> {
 
 
 pub trait VertexTookObserver{
-    fn vertex_took(&mut self, at: &GraphLocation, which: VertexIndex, last_morpheme: Option<Morpheme>) -> Result<(), SemanticError>;
+    fn vertex_took(&mut self, at: &GraphLocation, which: VertexIndex, last_morpheme: Option<Morpheme>) -> Result<(), semantics::Error>;
 }
 
 
@@ -98,7 +99,7 @@ mod tests {
             let lexer = lexer::Lexer::from_str(t);
 
             println!("\n\nSource Code:\n{}\n\n", t);
-            let mut semantics = parser::LoggingSemantics{};
+            let mut semantics = semantics::LoggingSemantics{};
             let mut parser = parser::Parser::new(lexer.morphemes().peekable(), &mut semantics);
 
             parser.parse().unwrap();
@@ -115,7 +116,7 @@ mod tests {
         for t in test_data {
             let lexer = lexer::Lexer::from_str(t);
 
-            let mut semantics = parser::NopSemantics{};
+            let mut semantics = semantics::NopSemantics{};
             let mut parser = parser::Parser::new(lexer.morphemes().peekable(), &mut semantics);
 
             match parser.parse() {

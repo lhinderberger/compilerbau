@@ -1,3 +1,4 @@
+use super::super::semantics;
 use super::super::lexer::Morpheme;
 use super::syntax_graph::GraphLocation;
 
@@ -5,17 +6,12 @@ use super::syntax_graph::GraphLocation;
 pub enum Error {
     EOF,
     InvalidMorpheme(Morpheme),
-    Semantic(SemanticError),
+    Semantic(semantics::Error),
     Syntax{ location: GraphLocation, next_morpheme: Morpheme }
 }
 
-#[derive(Debug)]
-pub enum SemanticError {
-
-}
-
-impl From<SemanticError> for Error {
-    fn from(e: SemanticError) -> Error {
+impl From<semantics::Error> for Error {
+    fn from(e: semantics::Error) -> Error {
         Error::Semantic(e)
     }
 }
