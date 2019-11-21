@@ -1,6 +1,6 @@
 use super::super::semantics;
 use super::super::lexer::Morpheme;
-use super::syntax_graph::GraphLocation;
+use super::GraphLocation;
 
 #[derive(Debug)]
 pub enum Error {

@@ -1,8 +1,6 @@
 use super::super::semantics;
 use super::super::lexer::*;
-use super::error::*;
-use super::syntax_graph::*;
-use super::pl0_syntax::PL0_SYNTAX;
+use super::*;
 
 use std::cell::RefCell;
 use std::iter::Peekable;

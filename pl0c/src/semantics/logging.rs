@@ -1,6 +1,5 @@
 use super::super::lexer::Morpheme;
-use super::super::parser::VertexTookObserver;
-use super::super::parser::syntax_graph::*;
+use super::super::parser::{ GraphLocation, VertexIndex, VertexTookObserver };
 use super::Error;
 
 

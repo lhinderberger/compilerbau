@@ -1,7 +1,7 @@
-use super::syntax_graph::{ Graph, GraphID, Node, Vertex };
+use super::{ Graph, GraphID, Node, Vertex };
 
-use super::syntax_graph::VertexCondition as VC;
-use super::syntax_graph::VertexTarget as VT;
+use super::VertexCondition as VC;
+use super::VertexTarget as VT;
 use super::super::lexer::SymbolType as Sym;
 
 use std::collections::HashMap;
