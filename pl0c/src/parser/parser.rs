@@ -1,15 +1,13 @@
 use super::super::lexer::*;
 use super::error::*;
 use super::syntax_graph::*;
-use super::pl0_syntax::*;
+use super::pl0_syntax::PL0_SYNTAX;
 
 use std::cell::RefCell;
-use std::collections::HashMap;
 use std::iter::Peekable;
 
 
 pub struct Parser<'a, T: VertexTookObserver> {
-    graphs: HashMap<GraphID, Graph>,
     morphemes: RefCell<Peekable<Morphemes<'a>>>,
     observer: RefCell<&'a mut T>
 }
@@ -23,7 +21,6 @@ pub trait VertexTookObserver{
 impl<'a, T: VertexTookObserver> Parser<'a, T> {
     pub fn new(morphemes: Peekable<Morphemes<'a>>, observer: &'a mut T) -> Self {
         Self {
-            graphs: newPL0SyntaxMap(),
             morphemes: RefCell::from(morphemes),
             observer: RefCell::from(observer)
         }
@@ -31,11 +28,12 @@ impl<'a, T: VertexTookObserver> Parser<'a, T> {
 
     
     pub fn parse(&mut self) -> Result<(), Error> {
-        self.parse_inner(self.graphs.get("PROGRAM").unwrap())
+        self.parse_inner(GraphID::PROGRAM)
     }
 
-    fn parse_inner(&self, graph: &Graph) -> Result<(), Error> {
-        let mut location = GraphLocation{graph: graph.id.clone(), node: 0};
+    fn parse_inner(&self, graph_id: GraphID) -> Result<(), Error> {
+        let graph = PL0_SYNTAX.get(&graph_id).unwrap();
+        let mut location = GraphLocation{graph: graph_id, node: 0};
 
         loop {
             let node = graph.nodes.get(location.node).unwrap();
@@ -57,8 +55,8 @@ impl<'a, T: VertexTookObserver> Parser<'a, T> {
                 self.observer.borrow_mut().vertex_took(&location, vertex_idx, morpheme)?;
 
                 // Recurse to subgraph (if neccessary)
-                if let VertexCondition::Subgraph(subgraph_id) = &vertex.condition {
-                    self.parse_inner(self.graphs.get(subgraph_id).unwrap())?;
+                if let VertexCondition::Subgraph(subgraph_id) = vertex.condition {
+                    self.parse_inner(subgraph_id)?;
                 }
 
                 // Advance to next node

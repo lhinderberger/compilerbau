@@ -5,7 +5,7 @@ use super::syntax_graph::*;
 pub struct NopSemantics {}
 
 impl VertexTookObserver for NopSemantics {
-    fn vertex_took(&mut self, at: &GraphLocation, which: VertexIndex, last_morpheme: Option<Morpheme>) -> Result<(),SemanticError> {
+    fn vertex_took(&mut self, _at: &GraphLocation, _which: VertexIndex, _last_morpheme: Option<Morpheme>) -> Result<(),SemanticError> {
         Ok(())
     }
 }

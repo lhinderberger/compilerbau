@@ -1,12 +1,23 @@
 use super::super::lexer::{ Morpheme, MorphemeContent, SymbolType };
 
-pub type GraphID = String;
 pub type NodeIndex = usize;
 pub type VertexIndex = usize;
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub enum GraphID {
+    PROGRAM,
+    BLOCK,
+        CONST, VAR, PROCEDURE,
+    STATEMENT,
+        ASSIGNMENT, IF, WHILE, COMPOUND,
+        CALL, INPUT, OUTPUT,
+    CONDITION,
+    EXPRESSION,
+        TERM, FACTOR
+}
+
 
 pub struct Graph {
-    pub id: GraphID,
     pub nodes: Vec<Node>
 }
 
@@ -78,10 +89,10 @@ fn test_condition_met() {
         (MorphemeContent::Symbol(SymbolType::Add), VertexCondition::Nil, true),
         (MorphemeContent::Identifier(s.clone()), VertexCondition::Nil, true),
 
-        (MorphemeContent::Invalid, VertexCondition::Subgraph(s.clone()), true),
-        (MorphemeContent::Number(123), VertexCondition::Subgraph(s.clone()), true),
-        (MorphemeContent::Symbol(SymbolType::Add), VertexCondition::Subgraph(s.clone()), true),
-        (MorphemeContent::Identifier(s.clone()), VertexCondition::Subgraph(s.clone()), true),
+        (MorphemeContent::Invalid, VertexCondition::Subgraph(GraphID::BLOCK), true),
+        (MorphemeContent::Number(123), VertexCondition::Subgraph(GraphID::BLOCK), true),
+        (MorphemeContent::Symbol(SymbolType::Add), VertexCondition::Subgraph(GraphID::BLOCK), true),
+        (MorphemeContent::Identifier(s.clone()), VertexCondition::Subgraph(GraphID::BLOCK), true),
 
         (MorphemeContent::Invalid, VertexCondition::IsSymbol(SymbolType::Add), false),
         (MorphemeContent::Number(123), VertexCondition::IsSymbol(SymbolType::Add), false),

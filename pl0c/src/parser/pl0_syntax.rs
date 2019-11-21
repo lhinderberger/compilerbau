@@ -12,25 +12,21 @@ macro_rules! vertex {
     }
 }
 
-pub fn newPL0SyntaxMap() -> HashMap<GraphID, Graph> {
-    newPL0Syntax().into_iter().map(|x| (x.id.clone(), x)).collect()
-}
+lazy_static! {
+  pub static ref PL0_SYNTAX: HashMap<GraphID, Graph> = {
+    let mut syntax = HashMap::new();
 
-pub fn newPL0Syntax() -> Vec<Graph> {
-  vec! [
-    Graph {
-      id: "PROGRAM".to_string(),
+    syntax.insert(GraphID::PROGRAM, Graph {
       nodes: vec![
         Node {
-          vertices: vec![vertex!(VC::Subgraph("BLOCK".to_string()), VT::Node(1))]
+          vertices: vec![vertex!(VC::Subgraph(GraphID::BLOCK), VT::Node(1))]
         },
         Node {
           vertices: vec![vertex!(VC::IsSymbol(Sym::Point), VT::EndOfGraph)]
         }
       ]
-    },
-    Graph {
-      id: "BLOCK".to_string(),
+    });
+    syntax.insert(GraphID::BLOCK, Graph {
       nodes: vec![
         Node {
           vertices: vec![
@@ -39,7 +35,7 @@ pub fn newPL0Syntax() -> Vec<Graph> {
           ]
         },
         Node {
-          vertices: vec![vertex!(VC::Subgraph("CONST".to_string()), VT::Node(2))]
+          vertices: vec![vertex!(VC::Subgraph(GraphID::CONST), VT::Node(2))]
         },
         Node {
           vertices: vec![
@@ -48,7 +44,7 @@ pub fn newPL0Syntax() -> Vec<Graph> {
           ]
         },
         Node {
-          vertices: vec![vertex!(VC::Subgraph("VAR".to_string()), VT::Node(4))]
+          vertices: vec![vertex!(VC::Subgraph(GraphID::VAR), VT::Node(4))]
         },
         Node {
           vertices: vec![
@@ -57,15 +53,14 @@ pub fn newPL0Syntax() -> Vec<Graph> {
           ]
         },
         Node {
-          vertices: vec![vertex!(VC::Subgraph("PROCEDURE".to_string()), VT::Node(6))]
+          vertices: vec![vertex!(VC::Subgraph(GraphID::PROCEDURE), VT::Node(6))]
         },
         Node {
-          vertices: vec![vertex!(VC::Subgraph("STATEMENT".to_string()), VT::EndOfGraph)]
+          vertices: vec![vertex!(VC::Subgraph(GraphID::STATEMENT), VT::EndOfGraph)]
         }
       ]
-    },
-    Graph {
-      id: "CONST".to_string(),
+    });
+    syntax.insert(GraphID::CONST, Graph {
       nodes: vec![
         Node {
           vertices: vec![vertex!(VC::IsIdentifier, VT::Node(1))]
@@ -83,9 +78,8 @@ pub fn newPL0Syntax() -> Vec<Graph> {
           ]
         }
       ]
-    },
-    Graph {
-      id: "VAR".to_string(),
+    });
+    syntax.insert(GraphID::VAR, Graph {
       nodes: vec![
         Node {
           vertices: vec![vertex!(VC::IsIdentifier, VT::Node(1))]
@@ -97,9 +91,8 @@ pub fn newPL0Syntax() -> Vec<Graph> {
           ]
         }
       ]
-    },
-    Graph {
-      id: "PROCEDURE".to_string(),
+    });
+    syntax.insert(GraphID::PROCEDURE, Graph {
       nodes: vec![
         Node {
           vertices: vec![vertex!(VC::IsIdentifier, VT::Node(1))]
@@ -108,15 +101,14 @@ pub fn newPL0Syntax() -> Vec<Graph> {
           vertices: vec![vertex!(VC::IsSymbol(Sym::Semicolon), VT::Node(2))]
         },
         Node {
-          vertices: vec![vertex!(VC::Subgraph("BLOCK".to_string()), VT::Node(3))]
+          vertices: vec![vertex!(VC::Subgraph(GraphID::BLOCK), VT::Node(3))]
         },
         Node {
           vertices: vec![vertex!(VC::IsSymbol(Sym::Semicolon), VT::EndOfGraph)]
         }
       ]
-    },
-    Graph {
-      id: "STATEMENT".to_string(),
+    });
+    syntax.insert(GraphID::STATEMENT, Graph {
       nodes: vec![
         Node {
           vertices: vec![
@@ -132,72 +124,68 @@ pub fn newPL0Syntax() -> Vec<Graph> {
         },
 
         Node {
-          vertices: vec![vertex!(VC::Subgraph("ASSIGNMENT".to_string()), VT::EndOfGraph)]
+          vertices: vec![vertex!(VC::Subgraph(GraphID::ASSIGNMENT), VT::EndOfGraph)]
         },
         Node {
-          vertices: vec![vertex!(VC::Subgraph("IF".to_string()), VT::EndOfGraph)]
+          vertices: vec![vertex!(VC::Subgraph(GraphID::IF), VT::EndOfGraph)]
         },
         Node {
-          vertices: vec![vertex!(VC::Subgraph("WHILE".to_string()), VT::EndOfGraph)]
+          vertices: vec![vertex!(VC::Subgraph(GraphID::WHILE), VT::EndOfGraph)]
         },
         Node {
-          vertices: vec![vertex!(VC::Subgraph("COMPOUND".to_string()), VT::EndOfGraph)]
+          vertices: vec![vertex!(VC::Subgraph(GraphID::COMPOUND), VT::EndOfGraph)]
         },
         Node {
-          vertices: vec![vertex!(VC::Subgraph("CALL".to_string()), VT::EndOfGraph)]
+          vertices: vec![vertex!(VC::Subgraph(GraphID::CALL), VT::EndOfGraph)]
         },
         Node {
-          vertices: vec![vertex!(VC::Subgraph("INPUT".to_string()), VT::EndOfGraph)]
+          vertices: vec![vertex!(VC::Subgraph(GraphID::INPUT), VT::EndOfGraph)]
         },
         Node {
-          vertices: vec![vertex!(VC::Subgraph("OUTPUT".to_string()), VT::EndOfGraph)]
+          vertices: vec![vertex!(VC::Subgraph(GraphID::OUTPUT), VT::EndOfGraph)]
         }        
       ]
-    },
-    Graph {
-      id: "ASSIGNMENT".to_string(),
+    });
+    syntax.insert(GraphID::ASSIGNMENT, Graph {
       nodes: vec![
         Node {
           vertices: vec![vertex!(VC::IsSymbol(Sym::Assignment), VT::Node(1))]
         },
         Node {
-          vertices: vec![vertex!(VC::Subgraph("EXPRESSION".to_string()), VT::EndOfGraph)]
+          vertices: vec![vertex!(VC::Subgraph(GraphID::EXPRESSION), VT::EndOfGraph)]
         }
       ]
-    },
-    Graph {
-      id: "IF".to_string(),
+    });
+    syntax.insert(GraphID::IF, Graph {
       nodes: vec![
         Node {
-          vertices: vec![vertex!(VC::Subgraph("CONDITION".to_string()), VT::Node(1))]
+          vertices: vec![vertex!(VC::Subgraph(GraphID::CONDITION), VT::Node(1))]
         },
         Node {
           vertices: vec![vertex!(VC::IsSymbol(Sym::Then), VT::Node(2))]
         },
         Node {
-          vertices: vec![vertex!(VC::Subgraph("STATEMENT".to_string()), VT::EndOfGraph)]
+          vertices: vec![vertex!(VC::Subgraph(GraphID::STATEMENT), VT::EndOfGraph)]
         }
       ]
-    },
-    Graph {
-      id: "WHILE".to_string(),
+    });
+    syntax.insert(GraphID::WHILE, Graph {
       nodes: vec![
         Node {
-          vertices: vec![vertex!(VC::Subgraph("CONDITION".to_string()), VT::Node(1))]
+          vertices: vec![vertex!(VC::Subgraph(GraphID::CONDITION), VT::Node(1))]
         },
         Node {
-          vertices: vec![vertex!(VC::IsSymbol(Sym::Then), VT::Node(2))]
+          vertices: vec![vertex!(VC::IsSymbol(Sym::Do), VT::Node(2))]
         },
         Node {
-          vertices: vec![vertex!(VC::Subgraph("STATEMENT".to_string()), VT::EndOfGraph)]
+          vertices: vec![vertex!(VC::Subgraph(GraphID::STATEMENT), VT::EndOfGraph)]
         }
       ]
-    },
-    Graph {
-      id: "COMPOUND".to_string(),
+    });
+    syntax.insert(GraphID::COMPOUND, Graph {
       nodes: vec![
         Node {
-          vertices: vec![vertex!(VC::Subgraph("STATEMENT".to_string()), VT::Node(1))]
+          vertices: vec![vertex!(VC::Subgraph(GraphID::STATEMENT), VT::Node(1))]
         },
         Node {
           vertices: vec![
@@ -206,42 +194,38 @@ pub fn newPL0Syntax() -> Vec<Graph> {
           ]
         }
       ]
-    },
-    Graph {
-      id: "CALL".to_string(),
+    });
+    syntax.insert(GraphID::CALL, Graph {
       nodes: vec![
         Node {
           vertices: vec![vertex!(VC::IsIdentifier, VT::EndOfGraph)]
         }
       ]
-    },
-    Graph {
-      id: "INPUT".to_string(),
+    });
+    syntax.insert(GraphID::INPUT, Graph {
       nodes: vec![
         Node {
           vertices: vec![vertex!(VC::IsIdentifier, VT::EndOfGraph)]
         }
       ]
-    },
-    Graph {
-      id: "OUTPUT".to_string(),
+    });
+    syntax.insert(GraphID::OUTPUT, Graph {
       nodes: vec![
         Node {
-          vertices: vec![vertex!(VC::Subgraph("EXPRESSION".to_string()), VT::EndOfGraph)]
+          vertices: vec![vertex!(VC::Subgraph(GraphID::EXPRESSION), VT::EndOfGraph)]
         }
       ]
-    },
-    Graph {
-      id: "CONDITION".to_string(),
+    });
+    syntax.insert(GraphID::CONDITION, Graph {
       nodes: vec![
         Node {
           vertices: vec![
             vertex!(VC::IsSymbol(Sym::Odd), VT::Node(1)),
-            vertex!(VC::Subgraph("EXPRESSION".to_string()), VT::Node(2))
+            vertex!(VC::Subgraph(GraphID::EXPRESSION), VT::Node(2))
           ]
         },
         Node {
-          vertices: vec![vertex!(VC::Subgraph("EXPRESSION".to_string()), VT::EndOfGraph)]
+          vertices: vec![vertex!(VC::Subgraph(GraphID::EXPRESSION), VT::EndOfGraph)]
         },
         Node {
           vertices: vec![
@@ -255,13 +239,12 @@ pub fn newPL0Syntax() -> Vec<Graph> {
         },
         Node {
           vertices: vec![
-            vertex!(VC::Subgraph("EXPRESSION".to_string()), VT::EndOfGraph)
+            vertex!(VC::Subgraph(GraphID::EXPRESSION), VT::EndOfGraph)
           ]
         }
       ]
-    },
-    Graph {
-      id: "EXPRESSION".to_string(),
+    });
+    syntax.insert(GraphID::EXPRESSION, Graph {
       nodes: vec![
         Node {
           vertices: vec![
@@ -270,7 +253,7 @@ pub fn newPL0Syntax() -> Vec<Graph> {
           ]
         },
         Node {
-          vertices: vec![vertex!(VC::Subgraph("TERM".to_string()), VT::Node(2))]
+          vertices: vec![vertex!(VC::Subgraph(GraphID::TERM), VT::Node(2))]
         },
         Node {
           vertices: vec![
@@ -280,12 +263,11 @@ pub fn newPL0Syntax() -> Vec<Graph> {
           ]
         }
       ]
-    },
-    Graph {
-      id: "TERM".to_string(),
+    });
+    syntax.insert(GraphID::TERM, Graph {
       nodes: vec![
         Node {
-          vertices: vec![vertex!(VC::Subgraph("FACTOR".to_string()), VT::Node(1))]
+          vertices: vec![vertex!(VC::Subgraph(GraphID::FACTOR), VT::Node(1))]
         },
         Node {
           vertices: vec![
@@ -295,9 +277,8 @@ pub fn newPL0Syntax() -> Vec<Graph> {
           ]
         }
       ]
-    },
-    Graph {
-      id: "FACTOR".to_string(),
+    });
+    syntax.insert(GraphID::FACTOR, Graph {
       nodes: vec![
         Node {
           vertices: vec![
@@ -307,12 +288,14 @@ pub fn newPL0Syntax() -> Vec<Graph> {
           ]
         },
         Node {
-          vertices: vec![vertex!(VC::Subgraph("EXPRESSION".to_string()), VT::Node(2))]
+          vertices: vec![vertex!(VC::Subgraph(GraphID::EXPRESSION), VT::Node(2))]
         },
         Node {
           vertices: vec![vertex!(VC::IsSymbol(Sym::RoundClosingBrace), VT::EndOfGraph)]
         }
       ]
-    }
-  ]
+    });
+
+    syntax
+  };
 }
