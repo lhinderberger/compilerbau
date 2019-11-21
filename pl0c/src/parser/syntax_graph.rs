@@ -1,7 +1,8 @@
-use super::super::lexer::SymbolType;
+use super::super::lexer::{ MorphemeContent, SymbolType };
 
 pub type GraphID = String;
 pub type NodeIndex = usize;
+pub type VertexIndex = usize;
 
 
 pub struct Graph {
@@ -19,6 +20,7 @@ pub struct Vertex {
 }
 
 
+#[derive(Debug, PartialEq)]
 pub enum VertexCondition {
     IsIdentifier,
     IsNumber,
@@ -30,4 +32,58 @@ pub enum VertexCondition {
 pub enum VertexTarget {
     EndOfGraph,
     Node(NodeIndex)
+}
+
+
+impl VertexCondition {
+    pub fn met_for(&self, morpheme: &MorphemeContent) -> bool {
+        match self {
+            VertexCondition::Nil => true,
+            VertexCondition::Subgraph(_) => true,
+            _ => match morpheme {
+                MorphemeContent::Invalid => false,
+                MorphemeContent::Number(_) => self == &VertexCondition::IsNumber,
+                MorphemeContent::Identifier(_) => self == &VertexCondition::IsIdentifier,
+                MorphemeContent::Symbol(s) => self == &VertexCondition::IsSymbol(*s)
+            }
+        }
+    }
+}
+
+
+#[test]
+fn test_condition_met() {
+    let s = "Test".to_string();
+    let test_data = vec![
+        (MorphemeContent::Invalid, VertexCondition::Nil, true),
+        (MorphemeContent::Number(123), VertexCondition::Nil, true),
+        (MorphemeContent::Symbol(SymbolType::Add), VertexCondition::Nil, true),
+        (MorphemeContent::Identifier(s.clone()), VertexCondition::Nil, true),
+
+        (MorphemeContent::Invalid, VertexCondition::Subgraph(s.clone()), true),
+        (MorphemeContent::Number(123), VertexCondition::Subgraph(s.clone()), true),
+        (MorphemeContent::Symbol(SymbolType::Add), VertexCondition::Subgraph(s.clone()), true),
+        (MorphemeContent::Identifier(s.clone()), VertexCondition::Subgraph(s.clone()), true),
+
+        (MorphemeContent::Invalid, VertexCondition::IsSymbol(SymbolType::Add), false),
+        (MorphemeContent::Number(123), VertexCondition::IsSymbol(SymbolType::Add), false),
+        (MorphemeContent::Symbol(SymbolType::Add), VertexCondition::IsSymbol(SymbolType::Add), true),
+        (MorphemeContent::Symbol(SymbolType::Subtract), VertexCondition::IsSymbol(SymbolType::Add), false),
+        (MorphemeContent::Identifier(s.clone()), VertexCondition::IsSymbol(SymbolType::Add), false),
+
+        
+        (MorphemeContent::Invalid, VertexCondition::IsNumber, false),
+        (MorphemeContent::Number(123), VertexCondition::IsNumber, true),
+        (MorphemeContent::Symbol(SymbolType::Add), VertexCondition::IsNumber, false),
+        (MorphemeContent::Identifier(s.clone()), VertexCondition::IsNumber, false),
+
+        (MorphemeContent::Invalid, VertexCondition::IsIdentifier, false),
+        (MorphemeContent::Number(123), VertexCondition::IsIdentifier, false),
+        (MorphemeContent::Symbol(SymbolType::Add), VertexCondition::IsIdentifier, false),
+        (MorphemeContent::Identifier(s.clone()), VertexCondition::IsIdentifier, true)
+    ];
+
+    for t in test_data {
+        assert_eq!(t.2, t.1.met_for(&t.0))
+    }
 }
