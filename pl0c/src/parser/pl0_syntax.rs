@@ -121,68 +121,111 @@ pub fn newPL0Syntax() -> Vec<Graph> {
         Node {
           vertices: vec![
             vertex!(VC::IsIdentifier, VT::Node(1)),
-            vertex!(VC::IsSymbol(Sym::If), VT::Node(3)),
-            vertex!(VC::IsSymbol(Sym::While), VT::Node(6)),
-            vertex!(VC::IsSymbol(Sym::Begin), VT::Node(9)),
-            vertex!(VC::IsSymbol(Sym::Call), VT::Node(11)),
-            vertex!(VC::IsSymbol(Sym::QuestionMark), VT::Node(12)),
-            vertex!(VC::IsSymbol(Sym::ExclamationMark), VT::Node(13)),
+            vertex!(VC::IsSymbol(Sym::If), VT::Node(2)),
+            vertex!(VC::IsSymbol(Sym::While), VT::Node(3)),
+            vertex!(VC::IsSymbol(Sym::Begin), VT::Node(4)),
+            vertex!(VC::IsSymbol(Sym::Call), VT::Node(5)),
+            vertex!(VC::IsSymbol(Sym::QuestionMark), VT::Node(6)),
+            vertex!(VC::IsSymbol(Sym::ExclamationMark), VT::Node(7)),
             vertex!(VC::Nil, VT::EndOfGraph)
           ]
         },
 
-        // Assignment
         Node {
-          vertices: vec![vertex!(VC::IsSymbol(Sym::Assignment), VT::Node(2))]
+          vertices: vec![vertex!(VC::Subgraph("ASSIGNMENT".to_string()), VT::EndOfGraph)]
+        },
+        Node {
+          vertices: vec![vertex!(VC::Subgraph("IF".to_string()), VT::EndOfGraph)]
+        },
+        Node {
+          vertices: vec![vertex!(VC::Subgraph("WHILE".to_string()), VT::EndOfGraph)]
+        },
+        Node {
+          vertices: vec![vertex!(VC::Subgraph("COMPOUND".to_string()), VT::EndOfGraph)]
+        },
+        Node {
+          vertices: vec![vertex!(VC::Subgraph("CALL".to_string()), VT::EndOfGraph)]
+        },
+        Node {
+          vertices: vec![vertex!(VC::Subgraph("INPUT".to_string()), VT::EndOfGraph)]
+        },
+        Node {
+          vertices: vec![vertex!(VC::Subgraph("OUTPUT".to_string()), VT::EndOfGraph)]
+        }        
+      ]
+    },
+    Graph {
+      id: "ASSIGNMENT".to_string(),
+      nodes: vec![
+        Node {
+          vertices: vec![vertex!(VC::IsSymbol(Sym::Assignment), VT::Node(1))]
         },
         Node {
           vertices: vec![vertex!(VC::Subgraph("EXPRESSION".to_string()), VT::EndOfGraph)]
-        },
-
-        // IF
+        }
+      ]
+    },
+    Graph {
+      id: "IF".to_string(),
+      nodes: vec![
         Node {
-          vertices: vec![vertex!(VC::Subgraph("CONDITION".to_string()), VT::Node(4))]
-        },
-        Node {
-          vertices: vec![vertex!(VC::IsSymbol(Sym::Then), VT::Node(5))]
-        },
-        Node {
-          vertices: vec![vertex!(VC::Subgraph("STATEMENT".to_string()), VT::EndOfGraph)]
-        },
-
-        // WHILE
-        Node {
-          vertices: vec![vertex!(VC::Subgraph("CONDITION".to_string()), VT::Node(7))]
+          vertices: vec![vertex!(VC::Subgraph("CONDITION".to_string()), VT::Node(1))]
         },
         Node {
-          vertices: vec![vertex!(VC::IsSymbol(Sym::Then), VT::Node(8))]
+          vertices: vec![vertex!(VC::IsSymbol(Sym::Then), VT::Node(2))]
         },
         Node {
           vertices: vec![vertex!(VC::Subgraph("STATEMENT".to_string()), VT::EndOfGraph)]
-        },
-
-        // BEGIN / END
+        }
+      ]
+    },
+    Graph {
+      id: "WHILE".to_string(),
+      nodes: vec![
         Node {
-          vertices: vec![vertex!(VC::Subgraph("STATEMENT".to_string()), VT::Node(10))]
+          vertices: vec![vertex!(VC::Subgraph("CONDITION".to_string()), VT::Node(1))]
+        },
+        Node {
+          vertices: vec![vertex!(VC::IsSymbol(Sym::Then), VT::Node(2))]
+        },
+        Node {
+          vertices: vec![vertex!(VC::Subgraph("STATEMENT".to_string()), VT::EndOfGraph)]
+        }
+      ]
+    },
+    Graph {
+      id: "COMPOUND".to_string(),
+      nodes: vec![
+        Node {
+          vertices: vec![vertex!(VC::Subgraph("STATEMENT".to_string()), VT::Node(1))]
         },
         Node {
           vertices: vec![
-            vertex!(VC::IsSymbol(Sym::Semicolon), VT::Node(9)),
+            vertex!(VC::IsSymbol(Sym::Semicolon), VT::Node(0)),
             vertex!(VC::IsSymbol(Sym::End), VT::EndOfGraph)
           ]
-        },
-
-        // CALL
+        }
+      ]
+    },
+    Graph {
+      id: "CALL".to_string(),
+      nodes: vec![
         Node {
           vertices: vec![vertex!(VC::IsIdentifier, VT::EndOfGraph)]
-        },
-
-        // ?
+        }
+      ]
+    },
+    Graph {
+      id: "INPUT".to_string(),
+      nodes: vec![
         Node {
           vertices: vec![vertex!(VC::IsIdentifier, VT::EndOfGraph)]
-        },
-
-        // !
+        }
+      ]
+    },
+    Graph {
+      id: "OUTPUT".to_string(),
+      nodes: vec![
         Node {
           vertices: vec![vertex!(VC::Subgraph("EXPRESSION".to_string()), VT::EndOfGraph)]
         }
