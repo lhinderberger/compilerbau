@@ -15,7 +15,7 @@ pub struct LoggingSemantics {}
 
 impl VertexTookObserver for LoggingSemantics {
     fn vertex_took(&mut self, at: &GraphLocation, which: VertexIndex, last_morpheme: Option<Morpheme>) -> Result<(),SemanticError> {
-        println!("Took Vertex #{} at location {:?} for morpheme {:?}", which, at, last_morpheme);
+        println!("Took Vertex #{} at {:?}, consumed {:?}", which, at, last_morpheme);
         Ok(())
     }
 }
