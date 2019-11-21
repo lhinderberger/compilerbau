@@ -1,4 +1,4 @@
-use super::super::lexer::{ MorphemeContent, SymbolType };
+use super::super::lexer::{ Morpheme, MorphemeContent, SymbolType };
 
 pub type GraphID = String;
 pub type NodeIndex = usize;
@@ -17,6 +17,13 @@ pub struct Node {
 pub struct Vertex {
     pub condition: VertexCondition,
     pub target: VertexTarget
+}
+
+
+#[derive(Debug)]
+pub struct GraphLocation {
+    pub graph: GraphID,
+    pub node: NodeIndex
 }
 
 
@@ -46,6 +53,17 @@ impl VertexCondition {
                 MorphemeContent::Identifier(_) => self == &VertexCondition::IsIdentifier,
                 MorphemeContent::Symbol(s) => self == &VertexCondition::IsSymbol(*s)
             }
+        }
+    }
+
+    pub fn met_for_morpheme_or_eof(&self, morpheme_or_eof: &Option<Morpheme>) -> bool {
+        match morpheme_or_eof {
+            None => match self {
+                VertexCondition::Nil => true,
+                VertexCondition::Subgraph(_) => true,
+                _ => false
+            },
+            Some(m) => self.met_for(&m.content)
         }
     }
 }

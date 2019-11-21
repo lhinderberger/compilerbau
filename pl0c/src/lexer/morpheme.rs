@@ -1,11 +1,11 @@
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Morpheme {
     pub offset: usize,
     pub length: usize,
     pub content: MorphemeContent
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum MorphemeContent {
     Invalid,
     Number(u64), //TODO: What about other numeric data types? Smaller integers?
