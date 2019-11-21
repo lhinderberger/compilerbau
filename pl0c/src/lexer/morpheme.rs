@@ -20,5 +20,5 @@ pub enum SymbolType {
     RoundOpeningBrace, RoundClosingBrace,
     Equals, Lesser, LesserOrEqual, Greater, GreaterOrEqual,
     Colon, Assignment,
-    Begin, Call, Const, End, Do, If, Procedure, Then, Var, While
+    Begin, Call, Const, End, Do, If, Procedure, Then, Var, While, Odd
 }

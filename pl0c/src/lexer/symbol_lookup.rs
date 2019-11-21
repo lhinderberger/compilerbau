@@ -24,7 +24,8 @@ impl SymbolLookup {
                 ("END", SymbolType::End), ("DO", SymbolType::Do),
                 ("IF", SymbolType::If), ("PROCEDURE", SymbolType::Procedure),
                 ("THEN", SymbolType::Then), ("VAR", SymbolType::Var),
-                ("WHILE", SymbolType::While), (",", SymbolType::Comma)
+                ("WHILE", SymbolType::While), (",", SymbolType::Comma),
+                ("ODD", SymbolType::Odd)
             ].iter().cloned().collect()
         }
     }

@@ -19,7 +19,8 @@ pub fn single_morphemes() -> Vec<(&'static str, MorphemeContent)> {
         ("Beginning", MorphemeContent::Identifier("BEGINNING".to_string())),
         ("Beginning234", MorphemeContent::Identifier("BEGINNING234".to_string())),
         ("234", MorphemeContent::Number(234)),
-        ("~", MorphemeContent::Invalid)
+        ("~", MorphemeContent::Invalid),
+        ("ODD", MorphemeContent::Symbol(SymbolType::Odd))
     ]
 }
 
