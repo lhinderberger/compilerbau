@@ -1,13 +1,19 @@
-use super::syntax_graph::{ Graph, Node, Vertex };
+use super::syntax_graph::{ Graph, GraphID, Node, Vertex };
 
 use super::syntax_graph::VertexCondition as VC;
 use super::syntax_graph::VertexTarget as VT;
 use super::super::lexer::SymbolType as Sym;
 
+use std::collections::HashMap;
+
 macro_rules! vertex {
     ($condition:expr, $target:expr) => {
         Vertex { condition: $condition, target: $target }
     }
+}
+
+pub fn newPL0SyntaxMap() -> HashMap<GraphID, Graph> {
+    newPL0Syntax().into_iter().map(|x| (x.id.clone(), x)).collect()
 }
 
 pub fn newPL0Syntax() -> Vec<Graph> {
