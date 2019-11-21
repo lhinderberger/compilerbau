@@ -260,7 +260,7 @@ pub fn newPL0Syntax() -> Vec<Graph> {
           vertices: vec![
             vertex!(VC::IsNumber, VT::EndOfGraph),
             vertex!(VC::IsSymbol(Sym::RoundOpeningBrace), VT::Node(1)),
-            vertex!(VC::Nil, VT::EndOfGraph)
+            vertex!(VC::IsIdentifier, VT::EndOfGraph)
           ]
         },
         Node {
