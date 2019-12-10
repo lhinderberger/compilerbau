@@ -83,6 +83,7 @@ impl<'a, T: VertexTookObserver> Parser<'a, T> {
 #[cfg(test)]
 mod tests {
     use super::super::super::*;
+    use std::io::stdout;
 
     #[test]
     fn valid_syntax_is_accepted() {
@@ -97,7 +98,8 @@ mod tests {
             let lexer = lexer::Lexer::from_str(t);
 
             println!("\n\nSource Code:\n{}\n\n", t);
-            let mut semantics = semantics::LoggingSemantics{};
+            let mut output = stdout();
+            let mut semantics = semantics::LoggingSemantics::with_output(&mut output);
             let mut parser = parser::Parser::new(lexer.morphemes().peekable(), &mut semantics);
 
             parser.parse().unwrap();
