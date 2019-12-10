@@ -9,7 +9,7 @@ mod semantics;
 
 use std::env::args;
 use std::fs::File;
-use std::io::{ Read, Write, stdin, stdout };
+use std::io::{ Read, Write, stderr, stdin, stdout };
 
 
 const STDIN_FILENAME : &'static str = "stdin";
@@ -28,6 +28,11 @@ fn build_commands() -> Vec<Command> {
             name: "list-morphemes".to_string(),
             description: "Runs only the Lexer and lists all Morphemes in the input".to_string(),
             command_fn: list_morphemes
+        },
+        Command {
+            name: "log-syntax".to_string(),
+            description: "Runs the parser without semantics, logging the syntax graph".to_string(),
+            command_fn: log_syntax
         },
         Command {
             name: "verify-syntax".to_string(),
@@ -92,13 +97,13 @@ fn list_morphemes(input: &mut dyn Read, output: &mut dyn Write) {
     morphemes.for_each(|m| writeln!(output, "{:?}", m).unwrap());
 }
 
-fn run_parser<T: parser::VertexTookObserver>(input: &mut dyn Read, semantics: &mut T) -> Result<(),parser::Error> {
-    let sourcecode = read_all(input);
+fn log_syntax(input: &mut dyn Read, output: &mut dyn Write) {
+    let result = run_parser(input, &mut semantics::LoggingSemantics::with_output(output));
 
-    let lexer = lexer::Lexer::from_str(&sourcecode);
-    let mut parser = parser::Parser::new(lexer.morphemes().peekable(), semantics);
-
-    parser.parse()
+    match result {
+        Err(e) => writeln!(stderr(), "Error: {:?}", e).unwrap(),
+        _ => ()
+    }
 }
 
 fn verify_syntax(input: &mut dyn Read, output: &mut dyn Write) {
@@ -106,9 +111,19 @@ fn verify_syntax(input: &mut dyn Read, output: &mut dyn Write) {
     writeln!(output, "{:?}", result).unwrap();
 }
 
+
 fn read_all(input: &mut dyn Read) -> String {
     let mut buffer = String::new();
     input.read_to_string(&mut buffer).unwrap();
 
     buffer
+}
+
+fn run_parser<T: parser::VertexTookObserver>(input: &mut dyn Read, semantics: &mut T) -> Result<(),parser::Error> {
+    let sourcecode = read_all(input);
+
+    let lexer = lexer::Lexer::from_str(&sourcecode);
+    let mut parser = parser::Parser::new(lexer.morphemes().peekable(), semantics);
+
+    parser.parse()
 }
